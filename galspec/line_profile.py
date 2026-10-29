@@ -5,7 +5,7 @@ from scipy.optimize import minimize
 from scipy.interpolate import interp1d
 from scipy.ndimage import gaussian_filter1d
 from .constants import ls_km
-from .utils import line_wave_dict
+from .utils import line_wave_dict, _scalar
 
 line_funcs = ['Line_template', 'Line_template_doublet', 'Line_GaussHermite',
               'Line_GaussHermite_doublet', 'Line_Gaussian', 'Line_MultiGauss',
@@ -810,7 +810,7 @@ class Line_Exponential(Fittable1DModel):
         v = (x - wavec) / wavec * ls_km  # convert to velocity (km/s)
         #f_gaus=np.exp(-0.5 * ((v - dv)/ sigma)**2)
         f_exp = amplitude * np.exp(-1 * np.abs((v - dv)/ w))
-        f= gaussian_filter1d(f_exp, sigma/(v[1]-v[0]))
+        f= gaussian_filter1d(f_exp, _scalar(sigma / (v[1] - v[0])))
         #f = convolve_fft(f_exp, f_gaus, normalize_kernel=True, boundary='wrap')
 
         return f

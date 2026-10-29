@@ -49,6 +49,27 @@ elif platform == "win32":  # Windows
 pathList = os.path.abspath(__file__).split(splitter)
 package_path = splitter.join(pathList[:-1])
 
+
+def _scalar(value: "float | np.ndarray") -> float:
+    """Return a size-one parameter value as a Python float.
+
+    Astropy hands parameters to ``evaluate`` as shape-(1,) arrays.  SciPy 1.18
+    (with NumPy 2.5) no longer converts those to a scalar, so passing one as
+    ``sigma`` to :func:`scipy.ndimage.gaussian_filter1d` raises ``TypeError``.
+
+    Parameters
+    ----------
+    value : float or array like
+        A scalar, or an array with exactly one element.
+
+    Returns
+    -------
+    value : float
+        The same number, in the same units, as a Python float.
+    """
+    return float(np.asarray(value, dtype=float).item())
+
+
 def _download_sfd_data():
     """Download SFD dust extinction map data if missing."""
     sfddata_dir = os.path.join(package_path, 'data', 'sfddata')
@@ -217,7 +238,7 @@ def calculate_bic(model, wave, flux, error=None):
     --------
     >>> from sagan.utils import calculate_bic
     >>> # Fit a model
-    >>> model_fit = fitter(model_init, wave, flux, weights=1/error**2)
+    >>> model_fit = fitter(model_init, wave, flux, weights=1/error)
     >>> # Calculate BIC
     >>> bic, chi2, n_params = calculate_bic(model_fit, wave, flux, error)
     >>> print(f"BIC: {bic:.1f}, χ²: {chi2:.1f}, Parameters: {n_params}")

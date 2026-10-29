@@ -4,7 +4,7 @@ from astropy.table import Table
 from scipy.ndimage import gaussian_filter1d
 from astropy.modeling.core import Fittable1DModel
 from astropy.modeling.parameters import Parameter
-from .utils import splitter, package_path
+from .utils import splitter, package_path, _scalar
 from .constants import ls_km
 from .stellar_continuum import log_rebin
 
@@ -138,7 +138,8 @@ wave_boroson1992, flux_boroson1992 = load_iron_template('boroson1992')
 
 class IronTemplate(Fittable1DModel):
     '''
-    This is a Fe template of AGN from I Zw 1 (Boroson & Green 1992).
+    Fe II template of an AGN: Mrk 493 (Park et al. 2022, the default) or
+    I Zw 1 (Boroson & Green 1992), set by ``template_name``.
 
     Parameters
     ----------
@@ -193,6 +194,7 @@ class IronTemplate(Fittable1DModel):
         """
         Gaussian model function.
         """
+        stddev = _scalar(stddev)
         if stddev < self._stddev_intr:
             flux_conv = self._flux_temp
         else:
@@ -206,7 +208,8 @@ class IronTemplate(Fittable1DModel):
 
 class IronTemplate_new(Fittable1DModel):
     '''
-    This is a Fe template of AGN from I Zw 1 (Boroson & Green 1992).
+    Fe II template of an AGN: Mrk 493 (Park et al. 2022, the default) or
+    I Zw 1 (Boroson & Green 1992), set by ``template_name``.
     Modified version of IronTemplate with:
     - sigma instead of stddev (same meaning)
     - dv parameter for velocity shift
@@ -267,6 +270,7 @@ class IronTemplate_new(Fittable1DModel):
         """
         Gaussian model function with velocity shift.
         """
+        sigma = _scalar(sigma)
         if sigma < self._stddev_intr:
             flux_conv = self._flux_temp
         else:
@@ -283,7 +287,8 @@ class IronTemplate_new(Fittable1DModel):
 
 class IronTemplate_tied(Fittable1DModel):
     '''
-    This is a Fe template of AGN from I Zw 1 (Boroson & Green 1992) with tied convolution kernel.
+    Fe II template of an AGN, Mrk 493 (Park et al. 2022, the default) or I Zw 1
+    (Boroson & Green 1992), broadened with a tied convolution kernel.
 
     Parameters
     ----------
@@ -395,6 +400,7 @@ class IronTemplate_tied(Fittable1DModel):
         amplifies whatever it divides by, and with a 2400-channel template and a
         340 km/s intrinsic width that is not a small effect.
         """
+        width = _scalar(width)
         if width <= self._stddev_intr:
             return self._flux_temp
         sig = np.sqrt(width ** 2 - self._stddev_intr ** 2) / self._vchan
@@ -422,6 +428,7 @@ class IronTemplate_tied(Fittable1DModel):
         # same convention as IronTemplate/IronTemplate_new: a width narrower than
         # the template's own cannot be represented, so the template is returned as
         # it is (which is also what the JAX model does)
+        stddev = _scalar(stddev)
         if stddev < self._stddev_intr:
             flux_conv = self._flux_temp
         else:
