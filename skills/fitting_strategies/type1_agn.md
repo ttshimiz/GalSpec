@@ -416,11 +416,11 @@ Lower BIC = better model (accounting for complexity).
 from sagan.utils import calculate_bic
 
 # Fit simple model (1 component)
-model_simple = fitter(model_1comp, wave, flux, weights=1/error**2)
+model_simple = fitter(model_1comp, wave, flux, weights=1/error)
 bic_simple, chi2_simple, n_simple = calculate_bic(model_simple, wave, flux, error)
 
 # Fit complex model (2 components)
-model_complex = fitter(model_2comp, wave, flux, weights=1/error**2)
+model_complex = fitter(model_2comp, wave, flux, weights=1/error)
 bic_complex, chi2_complex, n_complex = calculate_bic(model_complex, wave, flux, error)
 
 # Compare
@@ -810,7 +810,7 @@ from astropy.modeling import fitting
 # Fit
 fitter = fitting.LevMarLSQFitter()
 model_fit = fitter(model_init, wave_rest[s2_region], flux_obs[s2_region],
-                   weights=1/ferr_obs[s2_region]**2, maxiter=10000)
+                   weights=1/ferr_obs[s2_region], maxiter=10000)
 
 # Visual check
 import matplotlib.pyplot as plt
@@ -2205,7 +2205,7 @@ model_sii = cont_s2 + sii_6716 + sii_6731
 
 # Fit
 model_sii_fit = fitter(model_sii, wave[s2_region], flux[s2_region],
-                       weights=1/ferr[s2_region]**2, maxiter=10000)
+                       weights=1/ferr[s2_region], maxiter=10000)
 
 # Generate template
 velc_temp = np.linspace(-1000, 1000, 2000)

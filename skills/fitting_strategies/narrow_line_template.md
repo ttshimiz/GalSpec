@@ -288,7 +288,7 @@ from astropy.modeling import fitting
 
 fitter = fitting.LevMarLSQFitter()
 model_fit = fitter(model_init, wave_s2, flux_s2,
-                   weights=1/ferr_s2**2, maxiter=10000)
+                   weights=1/ferr_s2, maxiter=10000)
 
 # Calculate BIC
 from galspec.utils import calculate_bic
@@ -353,7 +353,7 @@ line_model = Line_Gaussian(
 )
 
 model_init = cont + line_model
-model_fit = fitter(model_init, wave, flux, weights=1/ferr**2)
+model_fit = fitter(model_init, wave, flux, weights=1/ferr)
 
 # Generate template directly from fitted model
 # (Make sure dv=0 in the model!)
@@ -466,7 +466,7 @@ sii_6731 = galspec.Line_template(
 
 model_verify = cont_s2 + sii_6716 + sii_6731
 model_verify_fit = fitter(model_verify, wave_s2, flux_s2,
-                          weights=1/ferr_s2**2, maxiter=10000)
+                          weights=1/ferr_s2, maxiter=10000)
 
 # Compare χ²
 chi2_orig = np.sum(((flux_s2 - model_fit(wave_s2)) / ferr_s2)**2)
@@ -745,7 +745,7 @@ model_init = cont_s2 + sii_doublet
 # ========================================
 fitter = fitting.LevMarLSQFitter()
 model_fit = fitter(model_init, wave_s2, flux_s2,
-                   weights=1/ferr_s2**2, maxiter=10000)
+                   weights=1/ferr_s2, maxiter=10000)
 
 print('[S II] fit completed')
 print(f"  dv_c = {model_fit.dv_c_1.value:.2f} km/s")

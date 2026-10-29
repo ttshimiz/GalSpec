@@ -722,7 +722,7 @@ from astropy.modeling import fitting
 
 fitter = fitting.LevMarLSQFitter()
 model_cont_fit = fitter(model_cont, wave_cont, flux_cont,
-                        weights=1/ferr_cont**2, maxiter=10000)
+                        weights=1/ferr_cont, maxiter=10000)
 ```
 
 ### Assess Fit Quality
@@ -1350,7 +1350,7 @@ model_cont = agn_cont + stellar + iron
 # ========================================
 fitter = fitting.LevMarLSQFitter()
 model_cont_fit = fitter(model_cont, wave_cont, flux_cont,
-                        weights=1/ferr_cont**2, maxiter=10000)
+                        weights=1/ferr_cont, maxiter=10000)
 
 # ========================================
 # 5. Visualize with plot_fit_new()

@@ -568,7 +568,7 @@ sii_doublet_1 = sagan.Line_MultiGauss_doublet(
 model_init_1 = cont_s2_1 + sii_doublet_1
 fitter = fitting.LevMarLSQFitter()
 model_fit_1 = fitter(model_init_1, wave_s2, flux_s2,
-                     weights=1/ferr_s2**2, maxiter=10000)
+                     weights=1/ferr_s2, maxiter=10000)
 
 # Calculate statistics
 chi2_1 = np.sum(((flux_s2 - model_fit_1(wave_s2)) / ferr_s2)**2)
@@ -648,7 +648,7 @@ sii_doublet_2 = sagan.Line_MultiGauss_doublet(
 
 model_init_2 = cont_s2_2 + sii_doublet_2
 model_fit_2 = fitter(model_init_2, wave_s2, flux_s2,
-                     weights=1/ferr_s2**2, maxiter=10000)
+                     weights=1/ferr_s2, maxiter=10000)
 
 # Calculate statistics
 chi2_2 = np.sum(((flux_s2 - model_fit_2(wave_s2)) / ferr_s2)**2)
@@ -777,7 +777,7 @@ sii_6731_temp = sagan.Line_template(
 
 model_template_fit = cont_test + sii_6716_temp + sii_6731_temp
 model_fit_template = fitter(model_template_fit, wave_s2, flux_s2,
-                            weights=1/ferr_s2**2, maxiter=10000)
+                            weights=1/ferr_s2, maxiter=10000)
 
 print(f'\nTemplate fit results:')
 print(f'  [S II] 6716 amplitude: {model_fit_template.amplitude_1.value:.4f}')

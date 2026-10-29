@@ -143,11 +143,11 @@ else:
 **Example: Deciding Number of Broad Components**:
 ```python
 # Fit 1-component model
-model_1comp = fitter(model_1, wave, flux, weights=1/error**2)
+model_1comp = fitter(model_1, wave, flux, weights=1/error)
 bic1, chi2_1, n1 = calculate_bic(model_1comp, wave, flux, error)
 
 # Fit 2-component model
-model_2comp = fitter(model_2, wave, flux, weights=1/error**2)
+model_2comp = fitter(model_2, wave, flux, weights=1/error)
 bic2, chi2_2, n2 = calculate_bic(model_2comp, wave, flux, error)
 
 print(f"1-component: BIC={bic1:.1f}, χ²/ν={chi2_1/len(wave):.3f}, n={n1}")

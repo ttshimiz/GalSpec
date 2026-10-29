@@ -219,7 +219,7 @@ model = cont + line
 
 # LSQ fit
 fitter = fitting.LevMarLSQFitter()
-model_lsq = fitter(model, wave, flux, weights=1 / ferr**2)
+model_lsq = fitter(model, wave, flux, weights=1 / ferr)
 
 # MCMC fit
 mcmc = galspec.MCMC_Fit(model_lsq, wave, flux, ferr, nwalkers=50, nsteps=1000)

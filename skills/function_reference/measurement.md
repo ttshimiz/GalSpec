@@ -74,7 +74,10 @@ print(f"Narrow Hα: {fwhm_nha:.0f} km/s")
 # Calculate black hole mass (using broad Hα)
 from galspec.utils import line_wave_dict
 
-# Virial mass formula (Vestergaard & Peterson 2006)
+# Virial mass formula -- illustrative only.  Vestergaard & Peterson (2006,
+# 2006ApJ...641..689V) calibrate Hbeta and C IV, not Halpha, and these
+# coefficients are not traced to a published Halpha calibration: replace
+# them with the one you cite, and state its virial factor.
 import numpy as np
 l_ha = 10**component.amplitude.value  # Luminosity in erg/s
 mass = 1.4e6 * (l_ha / 1e42)**0.64 * (fwhm_ha / 1000)**2

@@ -178,7 +178,7 @@ doublet_1 = galspec.Line_MultiGauss_doublet(
 model_init_1 = cont_1 + doublet_1
 fitter = fitting.LevMarLSQFitter()
 model_fit_1 = fitter(model_init_1, wave, flux,
-                     weights=1/ferr**2, maxiter=10000)
+                     weights=1/ferr, maxiter=10000)
 
 # Calculate statistics
 chi2_1 = np.sum(((flux - model_fit_1(wave)) / ferr)**2)
@@ -243,7 +243,7 @@ if user_input.lower() == 'y':
 
     model_init_2 = cont_2 + doublet_2
     model_fit_2 = fitter(model_init_2, wave, flux,
-                         weights=1/ferr**2, maxiter=10000)
+                         weights=1/ferr, maxiter=10000)
 
     # Calculate statistics
     chi2_2 = np.sum(((flux - model_fit_2(wave)) / ferr)**2)
@@ -371,7 +371,7 @@ line2_temp = galspec.Line_template(
 # Combine and fit
 model_template_init = cont_verify + line1_temp + line2_temp
 model_template_fit = fitter(model_template_init, wave, flux,
-                            weights=1/ferr**2, maxiter=10000)
+                            weights=1/ferr, maxiter=10000)
 
 print(f'\nTemplate fit results:')
 print(f'  {TEMPLATE_LINE} {LINE1_REST:.0f} amplitude: {model_template_fit.amplitude_1.value:.4f}')

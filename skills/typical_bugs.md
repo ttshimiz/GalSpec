@@ -161,7 +161,7 @@ the simplest (and most common) doublet model.
 ### The Bug
 
 ```python
-model_fit = fitter(model, wave, flux, weights=1 / ferr**2)
+model_fit = fitter(model, wave, flux, weights=1 / ferr)
 print(model_fit.Halpha.sigma.stds)      # AttributeError (astropy >= 6)
 print(model_fit.Halpha.sigma.std)       # None
 ```
