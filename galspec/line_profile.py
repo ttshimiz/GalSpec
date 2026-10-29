@@ -8,7 +8,8 @@ from .constants import ls_km
 from .utils import line_wave_dict, _scalar
 
 line_funcs = ['Line_template', 'Line_template_doublet', 'Line_GaussHermite',
-              'Line_GaussHermite_doublet', 'Line_Gaussian', 'Line_MultiGauss',
+              'Line_GaussHermite_doublet', 'Line_Gaussian', 'Line_Lorentzian',
+              'Line_MultiGauss',
               'Line_MultiGauss_doublet', 'Line_Absorption', 'Line_Absorption_doublet']
 # wind components carry parameters w0 .. w{MAX_MULTIGAUSS_WINGS-1}
 MAX_MULTIGAUSS_WINGS = 5
@@ -62,6 +63,56 @@ class Line_Gaussian(Fittable1DModel):
         """
         v = (x - wavec) / wavec * ls_km  # convert to velocity (km/s)
         f = amplitude * np.exp(-0.5 * ((v - dv)/ sigma)**2)
+
+        return f
+
+
+class Line_Lorentzian(Fittable1DModel):
+    '''
+    The Lorentzian line profile with the FWHM as the velocity.
+
+    ``f = amplitude / (1 + (2 (v - dv) / fwhm)**2)``, with
+    ``v = (x - wavec) / wavec * c`` as in :class:`Line_Gaussian`.
+
+    Parameters
+    ----------
+    x : array like
+        Wavelength, units: arbitrary.
+    amplitude : float
+        The peak of the line profile, units: same as the flux.
+    dv : float
+        The velocity of the line peak offset from wavec, units: km/s.
+    fwhm : float
+        The full width at half maximum of the line profile, units: km/s.
+    wavec : float
+        The central wavelength of the line profile, units: same as x.
+
+    Returns
+    -------
+    f : array like
+        The line profile, units: same as amplitude.
+
+    Notes
+    -----
+    The integrated flux is finite, ``pi / 2 * amplitude * fwhm * wavec / c``
+    (units: amplitude times those of x), but the second moment of a Lorentzian
+    diverges: a line dispersion (sigma) measured from this profile is set by
+    the integration window alone, not by the fit.  Quote the FWHM instead.
+    '''
+
+    amplitude = Parameter(default=1, bounds=(0, None))
+    dv = Parameter(default=0, bounds=(-2000, 2000))
+    fwhm = Parameter(default=500, bounds=(20, 20000))
+
+    wavec = Parameter(default=5000, fixed=True)
+
+    @staticmethod
+    def evaluate(x, amplitude, dv, fwhm, wavec):
+        """
+        Lorentzian model function.
+        """
+        v = (x - wavec) / wavec * ls_km  # convert to velocity (km/s)
+        f = amplitude / (1 + (2 * (v - dv) / fwhm)**2)
 
         return f
 
